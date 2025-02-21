@@ -31,8 +31,11 @@ function findProfessorsForCourse() {
                 const professorData = doc.data();
                 const courses = professorData.courses || [];
 
+                // Convert each course to lowercase and check if the courseId matches
+                const normalizedCourses = courses.map(course => course.toLowerCase());
+
                 // Check if the course is in the professor's courses array
-                if (courses.includes(courseId)) {
+                if (normalizedCourses.includes(courseId.toLowerCase())) {
                     professorsFound.push(professorData.name);
                 }
             });
