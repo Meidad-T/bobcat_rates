@@ -9,16 +9,16 @@
 <body>
     <div class="container">
         <h1>Professor Course Finder</h1>
-        <input type="text" id="courseName" placeholder="Enter Course (e.g., CS 1428)" oninput="showSuggestions()">
+        <input type="text" id="courseName" placeholder="Enter Course ID (e.g. CS 1428)">
         <button onclick="findProfessorsForCourse()">Search</button>
-        <div id="suggestions"></div>
         <div id="result"></div>
     </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
-    <script src="script.js"></script>
-    <script src="suggestions_menu.js"></script>
+    <!-- Import scripts for Firebase initialization and professor search -->
+    <script type="module" src="firebase_initialization.js"></script>
+    <script type="module" src="find_professors.js"></script>
 </body>
 </html>
