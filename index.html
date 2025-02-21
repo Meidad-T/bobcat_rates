@@ -9,8 +9,18 @@
 <body>
     <div class="container">
         <h1>Professor Course Finder</h1>
-        <input type="text" id="courseName" placeholder="Enter Course ID (e.g. CS 1428)">
-        <button onclick="findProfessorsForCourse()">Search</button>
+        <div class="input-group">
+            <div class="input-container">
+                <input type="text" id="coursePrefix" placeholder="Enter Course Prefix (e.g. CS)" oninput ```html
+                ="handlePrefixInput(event)">
+                <div id="prefixSuggestions" class="suggestions"></div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="courseNumber" placeholder="Enter Course Number (e.g. 1428)" oninput="handleNumberInput(event)">
+                <div id="numberSuggestions" class="suggestions"></div>
+            </div>
+            <button onclick="findProfessorsForCourse()">Search</button>
+        </div>
         <div id="result"></div>
     </div>
 
@@ -20,5 +30,7 @@
     <!-- Import scripts for Firebase initialization and professor search -->
     <script type="module" src="firebase_initialization.js"></script>
     <script type="module" src="find_professors.js"></script>
+    <script type="module" src="suggestions_menu.js"></script>
+    <script type="module" src="course_number_suggestions.js"></script>
 </body>
 </html>

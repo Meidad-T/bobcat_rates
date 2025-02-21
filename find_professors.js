@@ -1,21 +1,19 @@
-// find_professors.js
-
 // Import Firestore instance from firebase_initialization.js
 import { db } from './firebase_initialization.js';
 
 // Function to search for professors based on the course
 function findProfessorsForCourse() {
-    const courseName = document.getElementById('courseName').value.trim();
+    const coursePrefix = document.getElementById('coursePrefix').value.trim().toUpperCase();
+    const courseNumber = document.getElementById('courseNumber').value.trim();
     const resultDiv = document.getElementById('result');
 
-    if (!courseName) {
-        resultDiv.textContent = "Please enter a course name.";
+    if (!coursePrefix || !courseNumber) {
+        resultDiv.textContent = "Please enter both course prefix and number.";
         return;
     }
 
-    // Normalize course name: uppercase and add underscore if necessary
-    const normalizedCourseName = courseName.replace(/\s+/g, '').toUpperCase();
-    const courseId = normalizedCourseName.replace(/(\D)(\d)/g, '$1_$2'); // Adds underscore between letters and numbers
+    // Combine prefix and number to form course ID
+    const courseId = `${coursePrefix}_${courseNumber}`; // e.g., CS_1428
     console.log("Searching for course:", courseId); // Debugging log
 
     // Reference to the Professors collection in Firestore
@@ -31,20 +29,17 @@ function findProfessorsForCourse() {
                 const professorData = doc.data();
                 const courses = professorData.courses || [];
 
-                // Convert each course to lowercase and check if the courseId matches
-                const normalizedCourses = courses.map(course => course.toLowerCase());
-
                 // Check if the course is in the professor's courses array
-                if (normalizedCourses.includes(courseId.toLowerCase())) {
+                if (courses.includes(courseId)) {
                     professorsFound.push(professorData.name);
                 }
             });
 
             // Display the result
             if (professorsFound.length > 0) {
-                resultDiv.innerHTML = `<strong>Professors teaching ${courseName}:</strong><br>${professorsFound.join('<br>')}`;
+                resultDiv.innerHTML = `<strong>Professors teaching ${courseId.replace('_', ' ')}:</strong><br>${professorsFound.join('<br>')}`;
             } else {
-                resultDiv.textContent = `No professors found for the course: ${courseName}.`;
+                resultDiv.textContent = `No professors found for the course: ${courseId.replace('_', ' ')}.`;
             }
         })
         .catch((error) => {
