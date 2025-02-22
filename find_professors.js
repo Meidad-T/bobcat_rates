@@ -2,17 +2,7 @@
 import { db } from './firebase_initialization.js';
 import { rankProfessors } from './ranking_system.js';
 
-function findProfessorsForCourse() {
-    const coursePrefix = document.getElementById('coursePrefix').value.trim().toUpperCase();
-    const courseNumber = document.getElementById('courseNumber').value.trim();
-    const resultDiv = document.getElementById('result');
-    
-
-    if (!coursePrefix || !courseNumber) {
-        resultDiv.textContent = "Please enter both course prefix and number.";
-        return;
-    }
-
+function findProfessorsForCourse(coursePrefix, courseNumber, resultDiv) {
     const courseId = `${coursePrefix}_${courseNumber}`;
     console.log("Searching for course:", courseId);
 
@@ -82,5 +72,5 @@ function findProfessorsForCourse() {
         });
 }
 
-
+// Export the function for use in results.html
 window.findProfessorsForCourse = findProfessorsForCourse;

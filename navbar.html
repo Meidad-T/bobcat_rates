@@ -13,11 +13,19 @@
         <nav>
             <div class="logo"><span class="styled-text">Bobcat Rates</span></div>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="index.html">Home</a></li>
+                
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
+
+    <script>
+        document.getElementById("results-link").addEventListener("click", function(event) {
+            event.preventDefault();  // Prevents default anchor behavior
+            window.location.href = "results.html";  // Forces navigation to results.html
+        });
+    </script>
 </body>
 </html>

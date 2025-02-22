@@ -5,32 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results Screen - Professor Course Finder</title>
     <link rel="stylesheet" href="resultsUI.css">
+    <link rel="stylesheet" href="navbar.css"> <!-- Include navbar styles -->
 </head>
 <body>
+    <!-- Navigation Bar Placeholder -->
+    <header>
+        <nav>
+            <div class="logo"><span class="styled-text">Bobcat Rates</span></div>
+            <ul>
+                <li><a href="index.html">Find Course</a></li>
+                <li><a href="results.html">Results</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <div class="container">
         <h1>Search Results</h1>
+        <h2 id="course-title">Showing results for <span id="course-name"></span></h2>
         <div id="result"></div>
         <button onclick="goBack()">Back to Search</button>
     </div>
 
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
     <script type="module" src="firebase_initialization.js"></script>
     <script type="module" src="find_professors.js"></script>
+
+    <!-- Script to fetch and display results -->
     <script>
-        function goBack() {
-            window.location.href = 'main.html'; // Navigate back to the main screen
+        // Function to get URL parameters
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                coursePrefix: params.get('coursePrefix'),
+                courseNumber: params.get('courseNumber')
+            };
         }
 
-        // Load the results based on the saved input values
-        window.onload = function() {
-            const prefix = localStorage.getItem('coursePrefix');
-            const number = localStorage.getItem('courseNumber');
-            if (prefix && number) {
-                findProfessorsForCourse(prefix, number); // Call the function to display results
-            } else {
-                document.getElementById('result').textContent = "No course information found.";
+        // Function to display results
+        function displayResults() {
+            const { coursePrefix, courseNumber } = getQueryParams();
+            const resultDiv = document.getElementById('result');
+            const courseNameSpan = document.getElementById('course-name');
+
+            if (!coursePrefix || !courseNumber) {
+                resultDiv.textContent = "No course information found.";
+                return;
             }
+
+            // Display the course name and number
+            courseNameSpan.textContent = `${coursePrefix} ${courseNumber}`;
+
+            // Call the function to fetch and display results
+            findProfessorsForCourse(coursePrefix, courseNumber, resultDiv);
+        }
+
+        // Function to go back to the previous page
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Load the navigation bar
+        function loadNavbar() {
+            fetch('navbar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbar-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Error loading navbar:', error));
+        }
+
+        // Call functions on page load
+        window.onload = function() {
+            loadNavbar();
+            displayResults();
         };
     </script>
 </body>

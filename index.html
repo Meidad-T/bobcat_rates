@@ -11,7 +11,7 @@
 </head>
 <body>
     <!-- Include Navigation Bar -->
-    <iframe src="navbar.html" style="width: 100%; height: 80px; border: none;"></iframe>
+    <iframe id="nav-bar" src="navbar.html" style="width: 100%; height: 80px; border: none;"></iframe>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -36,8 +36,7 @@
                     <div id="numberSuggestions" class="suggestions"></div>
                 </div>
             </div>
-            <button onclick="findProfessorsForCourse()">Find Best Professor</button>
-            <div id="result"></div>
+            <button onclick="redirectToResults()">Find Best Professor</button>
         </div>
     </div>
 
@@ -52,7 +51,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
-    <!-- Import scripts for Firebase initialization and professor search -->
     <script type="module" src="firebase_initialization.js"></script>
     <script type="module" src="find_professors.js"></script>
     <script type="module" src="suggestions_menu.js"></script>
@@ -63,5 +61,34 @@
 
     <!-- Include Main Animations Script -->
     <script src="main_animations.js"></script>
+
+    <!-- Remove 'Home' from Navbar -->
+    <script>
+        document.getElementById('nav-bar').onload = function () {
+            const navDoc = document.getElementById('nav-bar').contentDocument;
+            if (navDoc) {
+                const homeLink = navDoc.querySelector('nav ul li a[href="index.html"]');
+                if (homeLink) {
+                    homeLink.parentElement.remove();
+                }
+            }
+        };
+    </script>
+
+    <!-- Redirect to Results Page -->
+    <script>
+        function redirectToResults() {
+            const coursePrefix = document.getElementById('coursePrefix').value.trim().toUpperCase();
+            const courseNumber = document.getElementById('courseNumber').value.trim();
+
+            if (!coursePrefix || !courseNumber) {
+                alert("Please enter both course prefix and number.");
+                return;
+            }
+
+            // Redirect to results.html with query parameters
+            window.location.href = `results.html?coursePrefix=${encodeURIComponent(coursePrefix)}&courseNumber=${encodeURIComponent(courseNumber)}`;
+        }
+    </script>
 </body>
 </html>
