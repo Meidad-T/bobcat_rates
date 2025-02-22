@@ -90,6 +90,7 @@ function closeDropdownOnClickOutside(event) {
 document.getElementById('coursePrefix').addEventListener('focus', showAllPrefixes);
 document.getElementById('coursePrefix').addEventListener('input', handlePrefixInput);
 
+
 // Attach event listener to course number input for handling number input
 document.getElementById('courseNumber').addEventListener('input', handleNumberInput);
 

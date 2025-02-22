@@ -5,21 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results Screen - Professor Course Finder</title>
     <link rel="stylesheet" href="resultsUI.css">
-    <link rel="stylesheet" href="navbar.css"> <!-- Include navbar styles -->
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="resultsSuggestions.css">
 </head>
 <body>
-    <!-- Navigation Bar Placeholder -->
+    <!-- Navigation Bar -->
     <header>
         <nav>
             <div class="logo"><span class="styled-text">Bobcat Rates</span></div>
+            
+            <!-- Search Fields in Navbar -->
+            <div class="input-group results-input-group">
+                <div class="input-container course-prefix">
+                    <input type="text" id="coursePrefixResults" class="results-input" placeholder="Course Prefix (CS, MATH)">
+                </div>
+                <div class="input-container course-number">
+                    <input type="text" id="courseNumberResults" class="results-input" placeholder="Course Number (101, 210, etc.)">
+                </div>
+                <button id="searchButton" class="search-button">🔍</button>
+            </div>
+
+            <!-- Navigation Links -->
             <ul>
-                <li><a href="index.html">Find Course</a></li>
-                <li><a href="results.html">Results</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
+
+    <!-- Suggestions containers (specific to this screen) -->
+    <div id="prefixSuggestionsResults" class="suggestions-results"></div>
+    <div id="numberSuggestionsResults" class="suggestions-results"></div>
 
     <div class="container">
         <h1>Search Results</h1>
@@ -33,10 +49,22 @@
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
     <script type="module" src="firebase_initialization.js"></script>
     <script type="module" src="find_professors.js"></script>
+    <script type="module" src="suggestions_menu.js"></script>
+    <script type="module" src="course_number_suggestions.js"></script>
 
-    <!-- Script to fetch and display results -->
+    <!-- Script to Handle Search -->
     <script>
-        // Function to get URL parameters
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const coursePrefix = document.getElementById('coursePrefixResults').value.trim().toUpperCase();
+            const courseNumber = document.getElementById('courseNumberResults').value.trim();
+            
+            if (coursePrefix && courseNumber) {
+                window.location.href = `results.html?coursePrefix=${coursePrefix}&courseNumber=${courseNumber}`;
+            } else {
+                alert("Please enter both a course prefix and a course number.");
+            }
+        });
+
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             return {
@@ -45,7 +73,6 @@
             };
         }
 
-        // Function to display results
         function displayResults() {
             const { coursePrefix, courseNumber } = getQueryParams();
             const resultDiv = document.getElementById('result');
@@ -56,33 +83,37 @@
                 return;
             }
 
-            // Display the course name and number
             courseNameSpan.textContent = `${coursePrefix} ${courseNumber}`;
-
-            // Call the function to fetch and display results
             findProfessorsForCourse(coursePrefix, courseNumber, resultDiv);
         }
 
-        // Function to go back to the previous page
         function goBack() {
             window.location.href = 'index.html';
         }
 
-        // Load the navigation bar
-        function loadNavbar() {
-            fetch('navbar.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('navbar-placeholder').innerHTML = data;
-                })
-                .catch(error => console.error('Error loading navbar:', error));
-        }
-
-        // Call functions on page load
         window.onload = function() {
-            loadNavbar();
             displayResults();
         };
+
+        // Position the suggestions dynamically based on the input position
+        const coursePrefixInput = document.getElementById('coursePrefixResults');
+        const courseNumberInput = document.getElementById('courseNumberResults');
+        const prefixSuggestions = document.getElementById('prefixSuggestionsResults');
+        const numberSuggestions = document.getElementById('numberSuggestionsResults');
+
+        coursePrefixInput.addEventListener('focus', function() {
+            const rect = coursePrefixInput.getBoundingClientRect();
+            prefixSuggestions.style.top = `${rect.bottom + window.scrollY}px`;
+            prefixSuggestions.style.left = `${rect.left + window.scrollX}px`;
+            prefixSuggestions.style.width = `${rect.width}px`;
+        });
+
+        courseNumberInput.addEventListener('focus', function() {
+            const rect = courseNumberInput.getBoundingClientRect();
+            numberSuggestions.style.top = `${rect.bottom + window.scrollY}px`;
+            numberSuggestions.style.left = `${rect.left + window.scrollX}px`;
+            numberSuggestions.style.width = `${rect.width}px`;
+        });
     </script>
 </body>
 </html>

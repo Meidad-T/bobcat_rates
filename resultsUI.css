@@ -26,9 +26,9 @@ nav {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px 20px;
+  height: 50px;
+  padding: 5px 20px; /* Reduced padding */
 }
-
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -181,4 +181,76 @@ button {
 
 button:hover {
   background-color: #5e0000; /* Darker maroon */
+}
+
+
+.input-group.results-input-group {
+  display: flex;
+  justify-content: flex-start; /* Align inputs to the left */
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.input-container.course-prefix {
+  margin-top: 15px; /* Adjusted margin to reduce space */
+  flex: 0 0 130px; /* Increased width for prefix input */
+}
+
+.input-container.course-number {
+  margin-top: 15px; /* Adjusted margin to reduce space */
+  flex: 1; /* Takes remaining space */
+}
+
+input.results-input[type="text"] {
+  width: 100%;
+  padding: 12px; /* Increased padding for height */
+  border: 2px solid #AC9155;
+  border-radius: 50px; /* Slightly smaller radius */
+  font-size: 17px; /* Increased font size */
+  box-sizing: border-box;
+  height: 50px; /* Increased height */
+  margin: 0; /* Remove margin to align with button */
+}
+
+.search-button {
+  background-color: white; /* White background */
+  border: 2px solid #AC9155;
+  border-radius: 50%; /* Make it a circle */
+  width: 45px; /* Increased width */
+  height: 45px; /* Increased height */
+  display: flex; /* Center the text */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 24px; /* Adjust font size */
+  margin-top: 15px; /* Adjusted margin to align with inputs */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+}
+
+.search-button:hover {
+  background-color: #f0f0f0; /* Light gray on hover */
+}
+
+
+/* Suggestions dropdown, floating over the navbar */
+.suggestions-results {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 9999;
+  display: none;
+}
+
+/* Show suggestions when input is focused */
+.input-container input:focus + .suggestions-results {
+  display: block;
+}
+
+/* Ensure the body doesn't overlap with floating suggestions */
+body {
+  padding-bottom: 20px;
 }
