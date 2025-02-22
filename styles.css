@@ -1,160 +1,178 @@
-/* Set the background image and make it cover the full width */
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
     height: 100vh;
-    background-color: #f4f4f4;
+    background-color: #f0f0f0;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; /* Aligning content vertically */
+    flex-direction: column;
 }
 
-/* Main container to hold both the background and content */
+/* Main Container */
 .main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content at the top */
+    align-items: flex-start; /* Align to the left */
+    padding-left: 10%; /* Add some padding from the left */
     position: relative;
-    width: 100%;
-    height: 100%;
+    z-index: 1; /* Ensure content is above the background image */
+    padding-top: 400px; /* Space from the top of the screen */
 }
 
-/* Position the background image to start 50px above the center */
-.background-image {
-    background-image: url('BG_river2.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100%;
-    height: 420px; /* Adjust the height as per your design */
+/* Title Section */
+/* Title Wrapper (New Container) */
+.title-wrapper {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: -1;
+    top: calc(50% - 300px); /* 300px above the center */
+    left: 10%; /* Align to the left */
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adds spacing between text elements */
 }
 
-/* Content container (for course search inputs and button) */
+/* Welcome Text */
+.welcome-text {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Bobcat Rates Title */
+.site-title {
+    font-size: 1rem;
+    margin-top: 40px;
+    font-family: 'Pacifico', cursive;
+    background: linear-gradient(to right, #a5b4fc, #ffffff, #fda4af);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 500px;
+}
+
+
+/* Input Fields and Button */
 .content-container {
-    position: absolute;
-    top: 50%;
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Center both vertically and horizontally */
-    text-align: center;
-    width: 90%;
-    max-width: 800px;
-    background-color: rgba(255, 255, 255, 0); /* Transparent background */
-    padding: 25px; /* Increased padding */
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0);
-    z-index: 1; /* Ensure content appears on top of the image */
-    color: white; /* White text color */
+    width: 100%;
+    max-width: 500px; /* Limit width for better readability */
 }
 
-/* Input fields and buttons styling */
 .input-group {
     display: flex;
-    justify-content: center; /* Center the input fields */
-    margin-bottom: 25px; /* Increased bottom margin */
+    justify-content: flex-start; /* Align inputs to the left */
+    margin-bottom: 25px;
     flex-wrap: wrap;
-    gap: 10px; /* Add gap between input containers */
+    gap: 10px;
 }
 
-/* Input container for course prefix (larger width) */
 .input-container.course-prefix {
-    flex: 0 0 190px; /* Increased width to 190px */
+    flex: 0 0 190px; /* Fixed width for prefix input */
 }
 
-/* Suggestion box for course prefix (matches the input box width) */
-.input-container.course-prefix .suggestions {
-    width: 190px; /* Match the width of the prefix input box */
-}
-
-/* Input container for course number (takes remaining space) */
 .input-container.course-number {
-    flex: 1; /* Takes up remaining space */
-}
-
-.input-container.course-number .suggestions {
-    width: 70%; /* Match the width of the course number input box */
+    flex: 1; /* Takes remaining space */
 }
 
 input[type="text"] {
     width: 100%;
-    padding: 15px; /* Increased padding for a slightly taller input */
+    padding: 15px;
     border: 1px solid #ccc;
-    border-radius: 25px; /* Rounded corners */
+    border-radius: 25px;
     font-size: 16px;
     box-sizing: border-box;
-    height: 50px; /* Increased height */
+    height: 50px;
 }
 
 button {
-    padding: 15px 20px; /* Increased padding for a taller button */
+    padding: 15px 20px;
     background-color: #501214; /* Maroon color */
     color: white;
     border: none;
-    border-radius: 25px; /* Rounded corners */
+    border-radius: 25px;
     cursor: pointer;
     font-size: 16px;
     width: 100%;
     box-sizing: border-box;
-    height: 50px; /* Increased height */
+    height: 50px;
 }
 
 button:hover {
     background-color: #AC9155; /* Darker maroon */
 }
 
-/* Suggestions menu */
+/* Suggestions Menu */
 .suggestions {
     position: absolute;
     background: white;
     border: 1px solid #ccc;
     border-radius: 4px;
     max-height: 150px;
-    overflow-y: auto; /* Enable scrolling */
+    overflow-y: auto;
     z-index: 1000;
     display: none;
     direction: rtl; /* Move scrollbar to the left */
 }
 
-/* Style the scrollbar */
 .suggestions::-webkit-scrollbar {
-    width: 4px; /* Thin scrollbar */
+    width: 4px;
 }
 
 .suggestions::-webkit-scrollbar-track {
-    background: transparent; /* Transparent track */
+    background: transparent;
 }
 
 .suggestions::-webkit-scrollbar-thumb {
-    background: #501214; /* Maroon color for the scrollbar */
-    border-radius: 2px; /* Rounded corners for the scrollbar */
-    
+    background: #501214;
+    border-radius: 2px;
 }
 
-/* Ensure content inside the suggestion box is aligned correctly */
 .suggestions div {
-    direction: ltr; /* Reset text direction for content */
+    direction: ltr;
     padding: 8px;
     cursor: pointer;
-    color: black; /* Set text color to black for dropdown items */
+    color: black;
 }
 
 .suggestions div:hover {
-    background-color: #AC9155; /* Highlight on hover */
+    background-color: #AC9155;
 }
 
-/* Title (white text) */
-.content-container h1 {
-    color: white; /* Title will remain white */
+/* Background Image */
+.bg-image {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    z-index: -1; /* Ensure it stays behind the content */
 }
 
-/* Responsive design for smaller screens */
+.bg-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire area */
+}
+
+/* Responsive Design */
 @media (max-width: 600px) {
     .input-group {
         flex-direction: column;
     }
     .input-container.course-prefix {
-        flex: 1; /* Allow it to take full width on smaller screens */
+        flex: 1;
     }
 }

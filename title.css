@@ -1,0 +1,50 @@
+/* Styles for the title container */
+.title-container {
+    text-align: center; /* Center the title */
+    margin-bottom: -250px; /* Position it 40px above the image area */
+}
+
+/* Styles for the "Welcome to" text */
+.welcome-text {
+    font-family: Arial, sans-serif; /* Use a clean, simple font */
+    font-size: 1.5rem; /* Adjust the size as needed */
+    color: rgb(32, 32, 32);
+    margin-bottom: -70px; /* Space between "Welcome to" and "Bobcat Rank" */
+}
+
+/* Existing styles for the site title */
+.site-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 3rem; /* Adjust the size as needed */
+    background: linear-gradient(to right,
+        #501214, /* exact indigo-300 */
+        #cb9b35, /* exact white */
+        #501214 /* exact rose-300 */
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 10px; /* Space between "Bobcat Rank" and the subtitle */
+}
+
+/* Styles for the subtitle */
+.subtitle {
+    font-family: Arial, sans-serif; /* Use a clean, simple font */
+    font-size: 1.2rem; /* Adjust the size as needed */
+    color: rgb(32, 32, 32); 
+    margin-top: -20px;
+}
+
+/* Responsive adjustments for the site title */
+@media (min-width: 440px) { /* sm breakpoint */
+    .site-title {
+        font-size: 4rem;
+    }
+}
+
+@media (min-width: 568px) { /* md breakpoint */
+    .site-title {
+        font-size: 4rem;
+    }
+}
