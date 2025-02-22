@@ -1,47 +1,178 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* General Styles */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-.container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
 }
 
-h1 {
-    margin-bottom: 20px;
+/* Main Container */
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content at the top */
+    align-items: flex-start; /* Align to the left */
+    padding-left: 10%; /* Add some padding from the left */
+    position: relative;
+    z-index: 1; /* Ensure content is above the background image */
+    padding-top: 400px; /* Space from the top of the screen */
 }
 
-input {
-    padding: 10px;
-    width: 200px;
-    margin-right: 10px;
+/* Title Section */
+/* Title Wrapper (New Container) */
+.title-wrapper {
+    position: absolute;
+    top: calc(50% - 300px); /* 300px above the center */
+    left: 10%; /* Align to the left */
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adds spacing between text elements */
+}
+
+/* Welcome Text */
+.welcome-text {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Bobcat Rates Title */
+.site-title {
+    font-size: 1rem;
+    margin-top: 40px;
+    font-family: 'Pacifico', cursive;
+    background: linear-gradient(to right, #a5b4fc, #ffffff, #fda4af);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 500px;
+}
+
+
+/* Input Fields and Button */
+.content-container {
+    width: 100%;
+    max-width: 500px; /* Limit width for better readability */
+}
+
+.input-group {
+    display: flex;
+    justify-content: flex-start; /* Align inputs to the left */
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.input-container.course-prefix {
+    flex: 0 0 190px; /* Fixed width for prefix input */
+}
+
+.input-container.course-number {
+    flex: 1; /* Takes remaining space */
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 15px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 25px;
+    font-size: 16px;
+    box-sizing: border-box;
+    height: 50px;
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: #fff;
+    padding: 15px 20px;
+    background-color: #501214; /* Maroon color */
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 50px;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #AC9155; /* Darker maroon */
 }
 
-#result {
-    margin-top: 20px;
-    font-size: 18px;
+/* Suggestions Menu */
+.suggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    direction: rtl; /* Move scrollbar to the left */
+}
+
+.suggestions::-webkit-scrollbar {
+    width: 4px;
+}
+
+.suggestions::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+    background: #501214;
+    border-radius: 2px;
+}
+
+.suggestions div {
+    direction: ltr;
+    padding: 8px;
+    cursor: pointer;
+    color: black;
+}
+
+.suggestions div:hover {
+    background-color: #AC9155;
+}
+
+/* Background Image */
+.bg-image {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    z-index: -1; /* Ensure it stays behind the content */
+}
+
+.bg-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire area */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .input-group {
+        flex-direction: column;
+    }
+    .input-container.course-prefix {
+        flex: 1;
+    }
 }

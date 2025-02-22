@@ -3,15 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professor Course Finder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <title>Bobcat Rank</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="resultsUI.css">
+    <link rel="stylesheet" href="title.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Professor Course Finder</h1>
-        <input type="text" id="courseName" placeholder="Enter Course ID (e.g. CS 1428)">
-        <button onclick="findProfessorsForCourse()">Search</button>
-        <div id="result"></div>
+    <!-- Include Navigation Bar -->
+    <iframe src="navbar.html" style="width: 100%; height: 80px; border: none;"></iframe>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Title Section -->
+        <!-- New Title Section Container -->
+<div class="title-wrapper">
+    <p class="welcome-text">Welcome to</p>
+    <h1 class="site-title">BOBCAT RATES</h1>
+    <p class="subtitle">The best tool to compare TXST professors and find the best ones for your courses.</p>
+</div>
+
+
+        <!-- Input Fields and Button -->
+        <div class="content-container">
+            <div class="input-group">
+                <!-- Course Prefix Input (shorter width) -->
+                <div class="input-container course-prefix">
+                    <input type="text" id="coursePrefix" placeholder="Prefix (e.g., CS)" oninput="handlePrefixInput(event)">
+                    <div id="prefixSuggestions" class="suggestions"></div>
+                </div>
+                <!-- Course Number Input (takes remaining space) -->
+                <div class="input-container course-number">
+                    <input type="text" id="courseNumber" placeholder="Course Number (e.g., 1428)" oninput="handleNumberInput(event)">
+                    <div id="numberSuggestions" class="suggestions"></div>
+                </div>
+            </div>
+            <button onclick="findProfessorsForCourse()">Find Best Professor</button>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <!-- Background Image -->
+    <div class="bg-image">
+        <img src="txst_BG_main.png" alt="TXST Background Image">
     </div>
 
     <!-- Firebase SDK -->
@@ -20,5 +54,7 @@
     <!-- Import scripts for Firebase initialization and professor search -->
     <script type="module" src="firebase_initialization.js"></script>
     <script type="module" src="find_professors.js"></script>
+    <script type="module" src="suggestions_menu.js"></script>
+    <script type="module" src="course_number_suggestions.js"></script>
 </body>
 </html>

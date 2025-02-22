@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Screen - Professor Course Finder</title>
+    <link rel="stylesheet" href="resultsUI.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        <div id="result"></div>
+        <button onclick="goBack()">Back to Search</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+    <script type="module" src="firebase_initialization.js"></script>
+    <script type="module" src="find_professors.js"></script>
+    <script>
+        function goBack() {
+            window.location.href = 'main.html'; // Navigate back to the main screen
+        }
+
+        // Load the results based on the saved input values
+        window.onload = function() {
+            const prefix = localStorage.getItem('coursePrefix');
+            const number = localStorage.getItem('courseNumber');
+            if (prefix && number) {
+                findProfessorsForCourse(prefix, number); // Call the function to display results
+            } else {
+                document.getElementById('result').textContent = "No course information found.";
+            }
+        };
+    </script>
+</body>
+</html>

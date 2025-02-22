@@ -1,51 +1,80 @@
-// find_professors.js
-
-// Import Firestore instance from firebase_initialization.js
+// Import Firestore and ranking function
 import { db } from './firebase_initialization.js';
+import { rankProfessors } from './ranking_system.js';
 
-// Function to search for professors based on the course
 function findProfessorsForCourse() {
-    const courseName = document.getElementById('courseName').value.trim();
+    const coursePrefix = document.getElementById('coursePrefix').value.trim().toUpperCase();
+    const courseNumber = document.getElementById('courseNumber').value.trim();
     const resultDiv = document.getElementById('result');
+    
 
-    if (!courseName) {
-        resultDiv.textContent = "Please enter a course name.";
+    if (!coursePrefix || !courseNumber) {
+        resultDiv.textContent = "Please enter both course prefix and number.";
         return;
     }
 
-    // Normalize course name: uppercase and add underscore if necessary
-    const normalizedCourseName = courseName.replace(/\s+/g, '').toUpperCase();
-    const courseId = normalizedCourseName.replace(/(\D)(\d)/g, '$1_$2'); // Adds underscore between letters and numbers
-    console.log("Searching for course:", courseId); // Debugging log
+    const courseId = `${coursePrefix}_${courseNumber}`;
+    console.log("Searching for course:", courseId);
 
-    // Reference to the Professors collection in Firestore
     const professorsRef = db.collection('Schools')
-                            .doc('texas_state_university') // Document (Texas State University)
-                            .collection('Professors'); // Professors collection
+                            .doc('texas_state_university')
+                            .collection('Professors');
 
-    // Query all professors and filter by courses containing the searched course
     professorsRef.get()
         .then((querySnapshot) => {
-            const professorsFound = [];
+            let professorsList = [];
+
             querySnapshot.forEach((doc) => {
                 const professorData = doc.data();
+                console.log(`Fetched Professor Data:`, professorData);  // 👀 DEBUG HERE
+
                 const courses = professorData.courses || [];
 
-                // Convert each course to lowercase and check if the courseId matches
-                const normalizedCourses = courses.map(course => course.toLowerCase());
+                if (courses.includes(courseId)) {
+                    // Initialize counts
+                    let loved = 0, liked = 0, hated = 0;
 
-                // Check if the course is in the professor's courses array
-                if (normalizedCourses.includes(courseId.toLowerCase())) {
-                    professorsFound.push(professorData.name);
+                    // Check if professor has ratings and the course exists inside the nested maps
+                    if (professorData.ratings && professorData.ratings[courseId]) {
+                        const courseRatings = professorData.ratings[courseId];
+                        loved = courseRatings.loved ?? 0;
+                        liked = courseRatings.liked ?? 0;
+                        hated = courseRatings.hated ?? 0;
+                    }
+
+                    console.log(`Processed Ratings -> ${professorData.name}: Loved(${loved}), Liked(${liked}), Hated(${hated})`); // 👀 DEBUG
+
+                    professorsList.push({
+                        name: professorData.name,
+                        loved: loved,
+                        liked: liked,
+                        hated: hated
+                    });
                 }
             });
 
-            // Display the result
-            if (professorsFound.length > 0) {
-                resultDiv.innerHTML = `<strong>Professors teaching ${courseName}:</strong><br>${professorsFound.join('<br>')}`;
-            } else {
-                resultDiv.textContent = `No professors found for the course: ${courseName}.`;
+            if (professorsList.length === 0) {
+                resultDiv.textContent = `No professors found for ${courseId.replace('_', ' ')}.`;
+                return;
             }
+
+            // Rank the professors
+            const rankedProfessors = rankProfessors(professorsList);
+
+            // Generate HTML for sorted professor cards
+            let professorCards = rankedProfessors.map((prof, index) => `
+                <div class="professor-card">
+                    <div class="rank">${index + 1}</div>
+                    <div class="professor-info">
+                        <div class="professor-name">${prof.name}</div>
+                        <div class="professor-ratings">
+                            ❤️ Loved: ${prof.loved} | 👍 Liked: ${prof.liked} | 💔 Hated: ${prof.hated}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            resultDiv.innerHTML = `<div class="professor-card-container">${professorCards}</div>`;
         })
         .catch((error) => {
             console.error("Error fetching data: ", error);
@@ -53,5 +82,5 @@ function findProfessorsForCourse() {
         });
 }
 
-// Attach the function to the global window object
+
 window.findProfessorsForCourse = findProfessorsForCourse;
