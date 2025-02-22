@@ -16,13 +16,11 @@
     <!-- Main Content -->
     <div class="main-container">
         <!-- Title Section -->
-        <!-- New Title Section Container -->
-<div class="title-wrapper">
-    <p class="welcome-text">Welcome to</p>
-    <h1 class="site-title">BOBCAT RATES</h1>
-    <p class="subtitle">The best tool to compare TXST professors and find the best ones for your courses.</p>
-</div>
-
+        <div class="title-wrapper">
+            <p class="welcome-text">Welcome to</p>
+            <h1 class="site-title">BOBCAT RATES</h1>
+            <p class="subtitle">The best tool to compare TXST professors and find the best ones for your courses.</p>
+        </div>
 
         <!-- Input Fields and Button -->
         <div class="content-container">
@@ -48,6 +46,9 @@
         <img src="txst_BG_main.png" alt="TXST Background Image">
     </div>
 
+    <!-- Lottie Animations Container -->
+    <div id="lottie-container"></div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
@@ -56,5 +57,11 @@
     <script type="module" src="find_professors.js"></script>
     <script type="module" src="suggestions_menu.js"></script>
     <script type="module" src="course_number_suggestions.js"></script>
+
+    <!-- Include Lottie Player -->
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
+    <!-- Include Main Animations Script -->
+    <script src="main_animations.js"></script>
 </body>
 </html>
