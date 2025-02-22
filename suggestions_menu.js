@@ -21,7 +21,11 @@ function handlePrefixInput(event) {
         suggestionItem.onclick = () => {
             document.getElementById('coursePrefix').value = prefix;
             suggestionsDiv.style.display = 'none';
-            fetchCourseNumbers(prefix); // Fetch course numbers for the selected prefix
+            // Update course numbers based on selected prefix
+            const courseNumberInput = document.getElementById('courseNumber').value;
+            if (courseNumberInput) {
+                fetchCourseNumbers(prefix, courseNumberInput);
+            }
         };
         suggestionsDiv.appendChild(suggestionItem);
     });
@@ -34,22 +38,11 @@ function handlePrefixInput(event) {
 function handleNumberInput(event) {
     const input = event.target.value.trim();
     const suggestionsDiv = document.getElementById('numberSuggestions');
+    const prefix = document.getElementById('coursePrefix').value.trim().toUpperCase();
 
-    if (input.length > 0) {
-        const filteredNumbers = Array.from(suggestionsDiv.children).filter(item => 
-            item.textContent.startsWith(input)
-        );
-
-        // Clear previous suggestions
-        suggestionsDiv.innerHTML = '';
-
-        filteredNumbers.forEach(item => {
-            item.style.display = 'block'; // Show matching numbers
-            suggestionsDiv.appendChild(item); // Re-add matching items
-        });
-
-        // Show suggestions if there are any
-        suggestionsDiv.style.display = filteredNumbers.length > 0 ? 'block' : 'none';
+    if (input.length > 0 && prefix.length > 0) {
+        // Fetch course numbers based on the selected prefix and number input
+        fetchCourseNumbers(prefix, input);
     } else {
         suggestionsDiv.style.display = 'none'; // Hide suggestions if input is empty
     }
@@ -66,7 +59,11 @@ function showAllPrefixes() {
         suggestionItem.onclick = () => {
             document.getElementById('coursePrefix').value = prefix;
             suggestionsDiv.style.display = 'none';
-            fetchCourseNumbers(prefix); // Fetch course numbers for the selected prefix
+            // Update course numbers based on selected prefix
+            const courseNumberInput = document.getElementById('courseNumber').value;
+            if (courseNumberInput) {
+                fetchCourseNumbers(prefix, courseNumberInput);
+            }
         };
         suggestionsDiv.appendChild(suggestionItem);
     });
@@ -74,5 +71,27 @@ function showAllPrefixes() {
     suggestionsDiv.style.display = 'block'; // Show all suggestions
 }
 
+// Function to close the dropdown if clicked outside
+function closeDropdownOnClickOutside(event) {
+    const suggestionsDiv = document.getElementById('prefixSuggestions');
+    const coursePrefixInput = document.getElementById('coursePrefix');
+    const numberSuggestionsDiv = document.getElementById('numberSuggestions');
+
+    // Check if the click was outside the dropdown or the input fields
+    if (!suggestionsDiv.contains(event.target) && event.target !== coursePrefixInput) {
+        suggestionsDiv.style.display = 'none'; // Close prefix suggestions
+    }
+    if (!numberSuggestionsDiv.contains(event.target) && event.target !== document.getElementById('courseNumber')) {
+        numberSuggestionsDiv.style.display = 'none'; // Close number suggestions
+    }
+}
+
 // Attach event listeners to show all prefixes on focus
 document.getElementById('coursePrefix').addEventListener('focus', showAllPrefixes);
+document.getElementById('coursePrefix').addEventListener('input', handlePrefixInput);
+
+// Attach event listener to course number input for handling number input
+document.getElementById('courseNumber').addEventListener('input', handleNumberInput);
+
+// Attach event listener to close dropdowns if clicked outside
+document.addEventListener('click', closeDropdownOnClickOutside);

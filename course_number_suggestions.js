@@ -1,8 +1,7 @@
-// Import Firestore instance from firebase_initialization.js
 import { db } from './firebase_initialization.js';
 
-// Function to fetch course numbers based on the selected prefix
-export function fetchCourseNumbers(prefix) {
+// Function to fetch course numbers based on the selected prefix and number input
+export function fetchCourseNumbers(prefix, numberInput) {
     const numberSuggestionsDiv = document.getElementById('numberSuggestions');
     numberSuggestionsDiv.innerHTML = ''; // Clear previous suggestions
 
@@ -19,7 +18,9 @@ export function fetchCourseNumbers(prefix) {
                 const courseNumber = courseId.split('_')[1]; // Extract the number part
                 const courseData = doc.data(); // Get the document data
                 const courseName = courseData.name; // Assuming the course name is stored in a field called 'name'
-                courseNumbers.push({ number: courseNumber, name: courseName });
+                if (courseNumber.startsWith(numberInput)) {
+                    courseNumbers.push({ number: courseNumber, name: courseName });
+                }
             }
         });
 
@@ -38,7 +39,7 @@ export function fetchCourseNumbers(prefix) {
         } else {
             // Show message if no courses are found
             const noCoursesMessage = document.createElement('div');
-            noCoursesMessage.textContent = `No courses named ${prefix} found.`;
+            noCoursesMessage.textContent = `No courses found for ${prefix} ${numberInput}.`;
             noCoursesMessage.style.color = 'red'; // Optional: style the message
             numberSuggestionsDiv.appendChild(noCoursesMessage);
             numberSuggestionsDiv.style.display = 'block'; // Show message
