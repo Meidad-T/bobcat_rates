@@ -57,21 +57,29 @@ ul li a {
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 0rem;
   color: #800000; /* Maroon color */
   margin-bottom: 10px;
+  text-align: center; /* Center the title */
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #333;
   margin-bottom: 20px;
+  margin-top: 20px;
+  text-align: center; /* Center the title */
 }
 
 #course-name {
+  font-size: 2.3rem;
+  display: block; /* Ensure it's a block-level element */
+  margin-top: 10px; /* Adjust this value for more space */
   font-weight: bold;
   color: #800000; /* Maroon color */
+  text-align: center; /* Center the title */
 }
+
 
 .professor-card-container {
   display: flex;
@@ -87,27 +95,57 @@ h2 {
   display: flex;
   align-items: stretch;
   width: 100%;
-  height: 100px;
-  background: #f5f5f5;
-  border-radius: 8px;
+  height: 150px; /* Increased from 100px */
+  background: #ffffff; /* White background */
+  border-radius: 0px 8px 8px 0px; /* Only the right corners are rounded, left corners are square */
   overflow: hidden;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 6px rgba(123, 123, 123, 0.1);
+  position: relative;
+  border: 0.5px solid rgb(165, 165, 165); /* Added 0.5px black border */
+
+}
+
+
+.rank {
+  background: #800000; /* Maroon color */
+  color: white;
+  font-size: 50px; /* Increased font size */
+  font-weight: bold;
+  width: 110px; /* Increased width */
+  height: 100%; /* Make sure it fills the height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Prevent shrinking of the maroon section */
+  
+}
+
+
+.icon-container {
+  position: absolute;
+  right: 20px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 10px; /* Space between icons */
+}
+
+.icon-container img {
+  width: 40px; /* Adjust size as needed */
+  height: 40px;
+  cursor: pointer;
+}
+
+/* Optional: Add hover effects to the icons */
+.icon-container img:hover {
+  opacity: 0.8;
 }
 
 .professor-card:first-child {
   margin-top: 30px;
 }
 
-.rank {
-  background: #800000; /* Maroon color */
-  color: white;
-  font-size: 50px;
-  font-weight: bold;
-  width: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .professor-info {
   flex-grow: 1;
@@ -117,11 +155,11 @@ h2 {
 }
 
 .professor-name {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
-  color: #333;
+  color: #1e1e1e;
   margin-right: 30px;
-  width: 250px;
+  width: 400px;
 }
 
 .professor-ratings {
@@ -254,3 +292,7 @@ input.results-input[type="text"] {
 body {
   padding-bottom: 20px;
 }
+
+
+
+
