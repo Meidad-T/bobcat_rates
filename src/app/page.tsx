@@ -7,12 +7,12 @@ export default function Home() {
       {/* Header Section */}
       <div className="bg-txst-maroon">
         <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-2xl font-bold text-white py-3 font-outfit">Bobcat Rates</h1>
+          <h1 className="text-2xl font-bold text-white py-4 font-outfit">Bobcat Rates</h1>
         </div>
       </div>
 
       {/* Hero Section with Background Image */}
-      <div className="relative bg-rmp-gray mt-16">
+      <div className="relative bg-rmp-gray mt-8">
         <div className="absolute inset-0 overflow-hidden">
           <Image
             src="/BG_oldmain.png"
@@ -25,7 +25,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
         </div>
 
-        <div className="relative z-10 py-32">
+        <div className="relative z-10 py-36">
           <div className="max-w-4xl mx-auto px-4 text-center">
             <h1 className="text-7xl md:text-8xl font-bold mb-4 text-white drop-shadow-lg font-outfit tracking-tight">
               Bobcat Rates
@@ -35,7 +35,10 @@ export default function Home() {
             </h2>
             
             {/* Search Section */}
-            <div className="bg-white/95 backdrop-blur-md rounded-xl p-10 shadow-xl max-w-3xl mx-auto">
+            <form 
+              action="/results" 
+              className="bg-white/95 backdrop-blur-md rounded-xl p-10 shadow-xl max-w-3xl mx-auto"
+            >
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="md:w-1/3">
                   <label htmlFor="prefix" className="block text-base font-medium text-gray-700 text-left mb-2">
@@ -43,8 +46,11 @@ export default function Home() {
                   </label>
                   <input
                     id="prefix"
+                    name="prefix"
                     type="text"
                     placeholder="e.g., CS"
+                    required
+                    pattern="[A-Za-z]+"
                     className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg text-rmp-text 
                              placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-txst-maroon/20 
                              focus:border-txst-maroon bg-white"
@@ -56,31 +62,34 @@ export default function Home() {
                   </label>
                   <input
                     id="number"
+                    name="number"
                     type="text"
                     placeholder="e.g., 1428, 2308"
+                    required
+                    pattern="[0-9]+"
                     className="w-full px-4 py-4 text-lg border border-gray-300 rounded-lg text-rmp-text 
                              placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-txst-maroon/20 
                              focus:border-txst-maroon bg-white"
                   />
                 </div>
               </div>
-              <Link 
-                href="/results"
+              <button 
+                type="submit"
                 className="mt-8 w-full inline-block px-8 py-4 bg-txst-maroon text-white text-lg rounded-lg
                          hover:bg-txst-maroon/90 transition-all duration-200 font-medium
                          transform hover:scale-[1.02] active:scale-[0.98] shadow-md"
               >
                 Search Professors
-              </Link>
-            </div>
+              </button>
+            </form>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="py-24 px-4 bg-white">
+      <div className="pt-12 pb-24 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-rmp-text">
+          <h2 className="text-4xl font-bold text-center mb-8 text-rmp-text">
             Why Use Bobcat Rates?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
