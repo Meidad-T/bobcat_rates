@@ -13,8 +13,16 @@ export const developerChoices: DeveloperChoice[] = [
     courses: ["CS_2318"]
   },
   {
-    name: "Roberto Barrero",
-    courses: "all"  // Recommended for all math courses
+    name: "Roberto Barrera",
+    courses: [
+      "MATH_2417",
+      "MATH_2471",
+      "MATH_1319",
+      "MATH_2313",
+      "MATH_2358",
+      "MATH_2472",
+      "MATH_3398"
+    ]
   },
   {
     name: "Ted Lehr",
@@ -32,15 +40,6 @@ export function isDeveloperChoice(professorName: string, courseId: string): bool
   const choice = developerChoices.find(c => c.name.toLowerCase() === professorName.toLowerCase());
   if (!choice) return false;
 
-  // If the professor is recommended for all courses of their department
-  if (choice.courses === 'all') {
-    // For Roberto Barrero, check if it's a math course
-    if (choice.name === "Roberto Barrero") {
-      return courseId.startsWith("MATH_");
-    }
-    return true;
-  }
-
-  // Otherwise, check if the specific course is in their recommended list
-  return choice.courses.includes(courseId);
+  // Check if the specific course is in their recommended list
+  return choice.courses === 'all' || choice.courses.includes(courseId);
 } 
