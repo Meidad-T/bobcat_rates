@@ -5,12 +5,13 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { getProfessorsForCourse, Professor } from '@/lib/firebase';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, ThumbsUp, ThumbsDown } from '@phosphor-icons/react';
+import { Heart, ThumbsUp, ThumbsDown, Star } from '@phosphor-icons/react';
 import { LoginButton } from '@/components/LoginButton';
 import { useAuth } from '@/lib/auth';
 import { doc, runTransaction } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
+import { isDeveloperChoice } from '@/lib/developer_choices';
 
 function RatingKey() {
   return (
@@ -405,9 +406,17 @@ export default function ResultsPage() {
                     {/* Professor Info */}
                     <div className="flex-grow p-6 flex items-center">
                       <div className="w-[450px]">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-3 truncate">
-                          {professor.name}
-                        </h2>
+                        <div className="flex items-center gap-3">
+                          <h2 className="text-3xl font-bold text-gray-900 truncate">
+                            {professor.name}
+                          </h2>
+                          {isDeveloperChoice(professor.name, courseId) && (
+                            <div className="flex items-center gap-1 bg-amber-500 text-white text-sm font-medium rounded-full px-3 py-1">
+                              <Star size={14} weight="fill" className="text-white" />
+                              <span>Developer's Choice</span>
+                            </div>
+                          )}
+                        </div>
                         {total > 0 && (
                           <div className="bg-gray-100 rounded-lg overflow-hidden w-56">
                             <div className="flex h-2">
