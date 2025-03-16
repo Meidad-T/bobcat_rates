@@ -13,6 +13,8 @@
     "@phosphor-icons/react": "^2.1.7",
     "@stripe/react-stripe-js": "^3.4.0",
     "@stripe/stripe-js": "^6.0.0",
+    "canvg": "^4.0.3",
+    "dompurify": "^3.0.8",
     "firebase": "^11.4.0",
     "jspdf": "^3.0.0",
     "jspdf-autotable": "^5.0.2",
