@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { toast } from 'react-hot-toast';
 
 interface RatingHistory {
   professorName: string;
@@ -158,6 +159,107 @@ export default function ProfileContent() {
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing Plans */}
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Support Bobcat Rates</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Help us keep improving the platform for all TXST students. We chose a simple one-time fee over
+            donations to ensure sustainable development and better features for everyone.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* Basic Plan */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-8 relative hover:border-gray-300 transition-all duration-300">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Basic</h3>
+              <p className="text-gray-500">Current Plan</p>
+              <div className="text-3xl font-bold text-gray-900 mt-4">Free</div>
+            </div>
+
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center text-gray-600">
+                <span className="bg-gray-100 rounded-full p-1 mr-3">✓</span>
+                5 ratings per day
+              </li>
+              <li className="flex items-center text-gray-600">
+                <span className="bg-gray-100 rounded-full p-1 mr-3">✓</span>
+                Basic profile view
+              </li>
+              <li className="flex items-center text-gray-400">
+                <span className="bg-gray-100 rounded-full p-1 mr-3">✗</span>
+                Early access to features
+              </li>
+              <li className="flex items-center text-gray-400">
+                <span className="bg-gray-100 rounded-full p-1 mr-3">✗</span>
+                Priority support
+              </li>
+              <li className="flex items-center text-gray-400">
+                <span className="bg-gray-100 rounded-full p-1 mr-3">✗</span>
+                Profile customization
+              </li>
+              <li className="flex items-center text-gray-400">
+                <span className="bg-gray-100 rounded-full p-1 mr-3">✗</span>
+                Export rating data
+              </li>
+            </ul>
+          </div>
+
+          {/* Pro Plan */}
+          <div className="bg-gradient-to-b from-white to-amber-50 rounded-2xl border-2 border-amber-500 p-8 relative transform hover:scale-[1.02] transition-all duration-300 shadow-lg">
+            <div className="absolute -top-4 right-4">
+              <div className="bg-amber-500 text-white text-sm font-semibold px-3 py-1 rounded-full">
+                Best Value
+              </div>
+            </div>
+
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Bobcat Pro</h3>
+              <p className="text-amber-600">Lifetime Access</p>
+              <div className="text-3xl font-bold text-gray-900 mt-4">$2.99</div>
+              <p className="text-gray-500 text-sm">One-time payment</p>
+            </div>
+
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center text-gray-600">
+                <span className="bg-amber-100 text-amber-600 rounded-full p-1 mr-3">✓</span>
+                10 ratings per day
+              </li>
+              <li className="flex items-center text-gray-600">
+                <span className="bg-amber-100 text-amber-600 rounded-full p-1 mr-3">✓</span>
+                Enhanced profile features
+              </li>
+              <li className="flex items-center text-gray-600">
+                <span className="bg-amber-100 text-amber-600 rounded-full p-1 mr-3">✓</span>
+                Early access to new features
+              </li>
+              <li className="flex items-center text-gray-600">
+                <span className="bg-amber-100 text-amber-600 rounded-full p-1 mr-3">✓</span>
+                Priority support (24-48 hours)
+              </li>
+              <li className="flex items-center text-gray-600">
+                <span className="bg-amber-100 text-amber-600 rounded-full p-1 mr-3">✓</span>
+                Profile customization options
+              </li>
+              <li className="flex items-center text-gray-600">
+                <span className="bg-amber-100 text-amber-600 rounded-full p-1 mr-3">✓</span>
+                Export your rating history
+              </li>
+            </ul>
+
+            <button 
+              onClick={() => {
+                toast.success('Coming soon! We\'re setting up payments.');
+              }}
+              className="w-full bg-amber-500 text-white rounded-xl py-4 font-semibold hover:bg-amber-600 transition-colors duration-300"
+            >
+              Upgrade to Pro
+            </button>
           </div>
         </div>
       </div>
