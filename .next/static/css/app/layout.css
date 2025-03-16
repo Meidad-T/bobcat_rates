@@ -625,9 +625,6 @@ video {
   margin-left: auto;
   margin-right: auto;
 }
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
 .mb-10 {
   margin-bottom: 2.5rem;
 }
@@ -1382,11 +1379,6 @@ body {
 .group:hover .group-hover\:text-gray-600 {
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity, 1));
-}
-
-.group:hover .group-hover\:text-txst-maroon {
-  --tw-text-opacity: 1;
-  color: rgb(80 18 20 / var(--tw-text-opacity, 1));
 }
 
 .group:hover .group-hover\:opacity-100 {
