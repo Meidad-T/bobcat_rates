@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/auth';
 import { useEffect, useState } from 'react';
-import { UserCircle, Heart, ThumbsUp, ThumbsDown, Star, SignOut, CaretDown } from '@phosphor-icons/react';
+import { UserCircle, Heart, ThumbsUp, ThumbsDown, Star, SignOut, CaretDown, DownloadSimple } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
@@ -12,6 +12,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useRouter } from 'next/navigation';
 import { PRO_FEATURES } from '@/lib/types';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface RatingHistory {
   professorName: string;
@@ -261,6 +263,104 @@ export default function ProfileContent() {
     }
   };
 
+  const handleExportData = () => {
+    if (!user?.isPro && !user?.isAdmin) {
+      toast((t) => (
+        <div className="flex items-center gap-4">
+          <div>
+            <p className="font-medium mb-1">Pro Feature</p>
+            <p className="text-sm text-gray-600">Upgrade to Pro to export your rating history!</p>
+          </div>
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+              handleUpgradeClick();
+            }}
+            className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600"
+          >
+            Upgrade
+          </button>
+        </div>
+      ), {
+        duration: 5000,
+        style: {
+          borderRadius: '10px',
+          background: '#fff',
+          color: '#333',
+        },
+      });
+      return;
+    }
+
+    try {
+      // Create PDF
+      const doc = new jsPDF();
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      // Add logo or header
+      doc.setFillColor(80, 18, 20); // TXST Maroon #501214
+      doc.rect(0, 0, doc.internal.pageSize.width, 40, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(24);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Bobcat Rates', 20, 25);
+      doc.setFontSize(12);
+      doc.text('Rating History Export', 20, 35);
+
+      // Add user info
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(14);
+      doc.text(`User: ${user?.displayName || 'Anonymous'}`, 20, 60);
+      doc.text(`Export Date: ${dateStr}`, 20, 70);
+      doc.text(`Account Type: ${user?.isPro ? 'Pro' : user?.isAdmin ? 'Admin' : 'Basic'}`, 20, 80);
+
+      // Add ratings table
+      const tableData = ratingHistory.map(rating => [
+        rating.professorName.replace(/_/g, ' '),
+        rating.courseId.replace(/_/g, ' '),
+        rating.rating.charAt(0).toUpperCase() + rating.rating.slice(1),
+        new Date(rating.timestamp).toLocaleDateString()
+      ]);
+
+      autoTable(doc, {
+        startY: 90,
+        head: [['Professor', 'Course', 'Rating', 'Date']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: {
+          fillColor: [80, 18, 20], // TXST Maroon #501214
+          textColor: [255, 255, 255],
+          fontStyle: 'bold'
+        },
+        styles: {
+          cellPadding: 5,
+          fontSize: 10,
+          lineColor: [200, 200, 200],
+          lineWidth: 0.1,
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        }
+      });
+
+      // Save the PDF
+      doc.save(`Bobcat Rates Export - ${dateStr}.pdf`);
+      toast.success('Rating history exported successfully!');
+    } catch (error) {
+      console.error('Error exporting data:', error);
+      if (error instanceof Error) {
+        toast.error(`Export failed: ${error.message}`);
+      } else {
+        toast.error('Failed to export data. Please try again.');
+      }
+    }
+  };
+
   // Use localUserState instead of user for rendering, with null check
   const displayUser = localUserState || user;
 
@@ -468,17 +568,28 @@ export default function ProfileContent() {
 
       {/* Rating History - Modern Card Grid */}
       <div className="bg-white rounded-2xl shadow-xl p-8">
-        <button 
-          onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-          className="w-full flex items-center justify-between mb-6 group"
-        >
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Rating History</h2>
-          <CaretDown 
-            size={24} 
-            weight="bold" 
-            className={`text-gray-400 transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''} group-hover:text-gray-600`}
-          />
-        </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleExportData}
+              className="text-gray-500 hover:text-amber-500 transition-colors duration-200"
+              title={user?.isPro || user?.isAdmin ? "Export Rating History" : "Pro Feature"}
+            >
+              <DownloadSimple size={24} weight="bold" />
+            </button>
+            <button 
+              onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+              className="group"
+            >
+              <CaretDown 
+                size={24} 
+                weight="bold" 
+                className={`text-gray-400 transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''} group-hover:text-gray-600`}
+              />
+            </button>
+          </div>
+        </div>
         
         <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isHistoryExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
           {loading ? (

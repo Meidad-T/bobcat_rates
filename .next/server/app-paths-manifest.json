@@ -1,6 +1,6 @@
 {
   "/page": "app/page.js",
-  "/results/page": "app/results/page.js",
   "/profile/page": "app/profile/page.js",
-  "/api/create-payment-intent/route": "app/api/create-payment-intent/route.js"
+  "/api/create-payment-intent/route": "app/api/create-payment-intent/route.js",
+  "/results/page": "app/results/page.js"
 }
