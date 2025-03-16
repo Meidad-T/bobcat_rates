@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { Heart, ThumbsUp, ThumbsDown, Star } from '@phosphor-icons/react';
 import { LoginButton } from '@/components/LoginButton';
 import { useAuth } from '@/lib/auth';
-import { doc, runTransaction } from 'firebase/firestore';
+import { doc, runTransaction, collection } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
 import { isDeveloperChoice } from '@/lib/developer_choices';
@@ -250,15 +250,15 @@ export default function ResultsPage() {
       // Use the professor's document reference directly
       const professorRef = doc(db, 'Schools', 'texas_state_university', 'Professors', professor.id);
       const userRef = doc(db, 'users', user.uid);
+      const userRatingsRef = collection(db, 'users', user.uid, 'ratings');
+      
       console.log('Attempting to access document:', professorRef.path);
 
       // Update both documents atomically
       await runTransaction(db, async (transaction) => {
         // Get current data
         const professorDoc = await transaction.get(professorRef);
-        console.log('Professor doc exists:', professorDoc.exists(), 'Data:', professorDoc.data());
         const userDoc = await transaction.get(userRef);
-        console.log('User doc exists:', userDoc.exists(), 'Data:', userDoc.data());
 
         if (!professorDoc.exists()) {
           throw new Error(`Professor ${professor.name} not found in database`);
@@ -276,15 +276,19 @@ export default function ResultsPage() {
         // Update the specific course rating
         ratings[courseId][type + 'd'] = (ratings[courseId][type + 'd'] || 0) + 1;
 
-        console.log('Updating ratings:', {
-          courseId,
-          type,
-          oldRatings: professorData.ratings?.[courseId],
-          newRatings: ratings[courseId]
-        });
-
         // Update professor document with new ratings
         transaction.update(professorRef, { ratings });
+
+        // Add rating to user's history
+        const ratingDoc = {
+          professorName: professor.name,
+          courseId: courseId,
+          rating: type,
+          timestamp: new Date(),
+        };
+        
+        // Add to user's rating history
+        transaction.set(doc(userRatingsRef), ratingDoc);
 
         // Update user document with new daily ratings and timestamp
         const newDailyRatingsLeft = Math.max(0, (userDoc.data()?.dailyRatingsLeft || 5) - 1);
@@ -293,7 +297,6 @@ export default function ResultsPage() {
           lastRatingDate: new Date()
         });
 
-        // Return the updated data so we can use it to update the UI
         return {
           newRatings: ratings[courseId],
           newDailyRatingsLeft

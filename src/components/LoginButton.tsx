@@ -4,11 +4,13 @@ import { useAuth } from '@/lib/auth';
 import Image from 'next/image';
 import { UserCircle, Star } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function LoginButton() {
-  const { user, signIn, signOut } = useAuth();
+  const { user, signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSignIn = async () => {
     try {
@@ -23,17 +25,8 @@ export function LoginButton() {
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      await signOut();
-    } catch (error) {
-      console.error('Sign out error:', error);
-      setError('Failed to sign out. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleProfileClick = () => {
+    router.push('/profile');
   };
 
   if (user) {
@@ -42,8 +35,7 @@ export function LoginButton() {
         <div className="flex items-center gap-4">
           <button 
             className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity disabled:opacity-50"
-            onClick={handleSignOut}
-            disabled={isLoading}
+            onClick={handleProfileClick}
           >
             {user.photoURL ? (
               <Image
@@ -70,7 +62,7 @@ export function LoginButton() {
         
         {/* Tooltip */}
         <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg py-2 px-4 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
-          Click to sign out
+          View profile
         </div>
 
         {error && (
