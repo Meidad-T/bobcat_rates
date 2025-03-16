@@ -2,11 +2,12 @@
 
 import { useAuth } from '@/lib/auth';
 import { useEffect, useState } from 'react';
-import { UserCircle, Heart, ThumbsUp, ThumbsDown, Star, SignOut, CaretDown, DownloadSimple } from '@phosphor-icons/react';
+import { UserCircle, Heart, ThumbsUp, ThumbsDown, Star, SignOut, CaretDown, DownloadSimple, PencilSimple, Check, X } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { db } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 import { toast } from 'react-hot-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -113,6 +114,9 @@ export default function ProfileContent() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [localUserState, setLocalUserState] = useState(user);
   const router = useRouter();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newName, setNewName] = useState(user?.displayName || '');
+  const [originalName, setOriginalName] = useState(user?.displayName || '');
 
   useEffect(() => {
     async function fetchRatingHistory() {
@@ -364,6 +368,42 @@ export default function ProfileContent() {
   // Use localUserState instead of user for rendering, with null check
   const displayUser = localUserState || user;
 
+  // Add this function to handle name update
+  const handleNameUpdate = async () => {
+    if (!displayUser) return;
+    
+    try {
+      // Update Firestore user document
+      const userRef = doc(db, 'users', displayUser.uid);
+      await setDoc(userRef, {
+        displayName: newName
+      }, { merge: true });
+
+      // Update Firebase Auth user's display name
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName: newName
+        });
+      }
+
+      // Update local state
+      if (user) {
+        user.displayName = newName;
+      }
+      setIsEditingName(false);
+      toast.success('Name updated successfully!');
+    } catch (error) {
+      console.error('Error updating name:', error);
+      toast.error('Failed to update name. Please try again.');
+    }
+  };
+
+  // Add this function to handle name cancel
+  const handleNameCancel = () => {
+    setNewName(originalName);
+    setIsEditingName(false);
+  };
+
   if (!displayUser) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -413,7 +453,48 @@ export default function ProfileContent() {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex flex-col gap-2">
-                  <h1 className="text-4xl font-bold text-gray-900">{displayUser.displayName || 'User'}</h1>
+                  {isEditingName ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        className="text-2xl font-bold text-gray-900 bg-white border-b-2 border-amber-500 focus:outline-none"
+                        autoFocus
+                      />
+                      <button
+                        onClick={handleNameUpdate}
+                        className="p-1 text-green-500 hover:text-green-600"
+                        title="Save"
+                      >
+                        <Check size={20} weight="bold" />
+                      </button>
+                      <button
+                        onClick={handleNameCancel}
+                        className="p-1 text-red-500 hover:text-red-600"
+                        title="Cancel"
+                      >
+                        <X size={20} weight="bold" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <h1 className="text-4xl font-bold text-gray-900">{displayUser.displayName || 'User'}</h1>
+                      {(displayUser.isPro || displayUser.isAdmin) && (
+                        <button
+                          onClick={() => {
+                            setOriginalName(displayUser.displayName || '');
+                            setNewName(displayUser.displayName || '');
+                            setIsEditingName(true);
+                          }}
+                          className="p-1 text-gray-400 hover:text-amber-500 transition-colors"
+                          title="Edit Name"
+                        >
+                          <PencilSimple size={20} weight="bold" />
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     {displayUser.isAdmin && (
                       <div className="px-3 py-1 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full text-sm font-medium shadow-sm">
