@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDfqU86jc3ycXWjLQHf8V1PDZKbvz7TO80",
@@ -15,8 +16,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
 export interface Professor {
+  id: string;
   name: string;
   courses: string[];
   ratings: {
@@ -51,6 +55,7 @@ export async function getProfessorsForCourse(prefix: string, number: string): Pr
       // Case-insensitive search for the course
       if (coursesArray.some((course: string) => course.toUpperCase() === courseId.toUpperCase())) {
         professors.push({
+          id: profDoc.id,
           name: profDoc.id,
           courses: coursesArray,
           ratings: profData.ratings || {}
@@ -72,4 +77,4 @@ export async function getProfessorsForCourse(prefix: string, number: string): Pr
   }
 }
 
-export { db }; 
+export { db, auth, googleProvider }; 

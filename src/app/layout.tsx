@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter, Outfit } from 'next/font/google'
 import './globals.css'
+import { Toaster } from 'react-hot-toast'
+import { AuthProvider } from '@/components/AuthProvider'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -27,7 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <body className={`${inter.className} antialiased`}>
-        {children}
+        <AuthProvider>
+          <Toaster position="bottom-center" />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )

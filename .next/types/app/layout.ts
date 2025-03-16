@@ -1,4 +1,4 @@
-// File: C:\Users\meida\Downloads\BobcatRates\Bobcat-Rates\src\app\layout.tsx
+// File: C:\Users\meida\Downloads\bobcat_rates\bobcat_rates-1\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
