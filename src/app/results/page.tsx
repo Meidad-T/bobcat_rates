@@ -233,74 +233,74 @@ export default function ResultsPage() {
       return;
     }
 
-    // 2. Check if user has ratings left
-    if (user.dailyRatingsLeft <= 0) {
-      toast.error('You have used all your ratings for today');
-      return;
-    }
-
     try {
-      // Debug logging
-      console.log('Rating professor:', {
-        name: professor.name,
-        id: professor.id,
-        courseId: courseId
-      });
-      
-      // Use the professor's document reference directly
-      const professorRef = doc(db, 'Schools', 'texas_state_university', 'Professors', professor.id);
       const userRef = doc(db, 'users', user.uid);
+      const professorRef = doc(db, 'Schools', 'texas_state_university', 'Professors', professor.id);
       const userRatingsRef = collection(db, 'users', user.uid, 'ratings');
-      
-      console.log('Attempting to access document:', professorRef.path);
 
-      // Update both documents atomically
       await runTransaction(db, async (transaction) => {
-        // Get current data
+        const userData = await transaction.get(userRef);
         const professorDoc = await transaction.get(professorRef);
-        const userDoc = await transaction.get(userRef);
+
+        if (!userData.exists()) {
+          throw new Error('User document does not exist');
+        }
 
         if (!professorDoc.exists()) {
-          throw new Error(`Professor ${professor.name} not found in database`);
+          throw new Error('Professor document does not exist');
         }
 
-        // Get current ratings or initialize if not exists
-        const professorData = professorDoc.data();
-        const ratings = professorData.ratings || {};
-        
-        // Initialize course ratings if they don't exist
-        if (!ratings[courseId]) {
-          ratings[courseId] = { loved: 0, liked: 0, hated: 0 };
+        const userDataObj = userData.data();
+        const lastReset = userDataObj.lastRatingReset ? new Date(userDataObj.lastRatingReset) : new Date(0);
+        const now = new Date();
+        const lastMidnight = new Date(now);
+        lastMidnight.setHours(0, 0, 0, 0);
+
+        // Check if we need to reset daily ratings
+        const shouldReset = lastReset < lastMidnight;
+        const ratingLimit = user.isPro ? 10 : 5;
+        const currentRatingsUsed = shouldReset ? 0 : (userDataObj.dailyRatingsUsed || 0);
+
+        // Check if user has ratings left
+        if (currentRatingsUsed >= ratingLimit) {
+          throw new Error('You have used all your ratings for today');
         }
 
-        // Update the specific course rating
-        ratings[courseId][type + 'd'] = (ratings[courseId][type + 'd'] || 0) + 1;
-
-        // Update professor document with new ratings
-        transaction.update(professorRef, { ratings });
-
-        // Add rating to user's history
-        const ratingDoc = {
-          professorName: professor.name,
-          courseId: courseId,
-          rating: type,
-          timestamp: new Date(),
+        // Get current ratings or initialize if they don't exist
+        const currentRatings = professorDoc.data().ratings?.[courseId] || {
+          loved: 0,
+          liked: 0,
+          hated: 0
         };
-        
-        // Add to user's rating history
-        transaction.set(doc(userRatingsRef), ratingDoc);
 
-        // Update user document with new daily ratings and timestamp
-        const newDailyRatingsLeft = Math.max(0, (userDoc.data()?.dailyRatingsLeft || 5) - 1);
-        transaction.update(userRef, {
-          dailyRatingsLeft: newDailyRatingsLeft,
-          lastRatingDate: new Date()
+        // Create new ratings object
+        const newRatings = {
+          ...currentRatings,
+          [type === 'love' ? 'loved' : type === 'like' ? 'liked' : 'hated']: currentRatings[type === 'love' ? 'loved' : type === 'like' ? 'liked' : 'hated'] + 1
+        };
+
+        // Update professor document
+        transaction.update(professorRef, {
+          [`ratings.${courseId}`]: newRatings
         });
 
-        return {
-          newRatings: ratings[courseId],
-          newDailyRatingsLeft
-        };
+        // Add to user's rating history
+        const ratingDoc = doc(userRatingsRef);
+        transaction.set(ratingDoc, {
+          professorName: professor.id,
+          courseId: courseId,
+          rating: type === 'love' ? 'loved' : type === 'like' ? 'liked' : 'hated',
+          timestamp: now
+        });
+
+        // Update user's daily ratings
+        transaction.update(userRef, {
+          lastRatingReset: shouldReset ? now.toISOString() : userDataObj.lastRatingReset,
+          dailyRatingsUsed: currentRatingsUsed + 1,
+          dailyRatingsLeft: ratingLimit - (currentRatingsUsed + 1)
+        });
+
+        return { newRatings, newDailyRatingsLeft: ratingLimit - (currentRatingsUsed + 1) };
       }).then(({ newRatings, newDailyRatingsLeft }) => {
         // Update local state with new ratings
         setProfessors(prevProfessors => 

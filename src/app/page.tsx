@@ -1,13 +1,17 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { LoginButton } from '@/components/LoginButton'
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* Header Section */}
       <div className="bg-txst-maroon">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-2xl font-bold text-white py-4 font-outfit">Bobcat Rates</h1>
+        <div className="max-w-[1440px] mx-auto">
+          <div className="flex items-center justify-between h-16 px-6">
+            <h1 className="text-2xl font-bold text-white font-outfit">Bobcat Rates</h1>
+            <LoginButton />
+          </div>
         </div>
       </div>
 
